@@ -1,27 +1,29 @@
-import axios from "axios";
+import axios from "axios"
 
 const axiosClient = axios.create({
-    baseURL: `${import.meta.env.VITE_API_BASE_URL}}/api`
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
 })
 
-axiosClient.interceptors.request.use((config)=>{
+axiosClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('ACCESS_TOKEN')
 
-    const token = localStorage.get('ACCES_TOKEN')
-    config.headers.Authorization = `Bearer ${token}`
-    return config;
+  config.headers.Authorization = `Bearer ${token}`
+  return config;
 })
+console.log("URL base:", axiosClient.defaults.baseURL);
 
 axiosClient.interceptors.response.use((response) => {
-
-return response;
-
+  return response;
 }, (error) => {
-
-    const {response} = error;
-
-    if (response.status === 401) {
-        localStorage.removeItem('ACCES_TOKEN')
-    }
-    throw error;
+  try{
+      const {response} = error;
+      if (response.status === 401) {
+      localStorage.removeItem('ACCESS_TOKEN')
+      }
+     } catch (e) {
+      console.error(e);
+     }
+  throw error;
 })
-export default axiosClient;
+
+export default axiosClient
