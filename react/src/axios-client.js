@@ -5,25 +5,38 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('ACCESS_TOKEN')
+  const token = localStorage.getItem('ACCESS_TOKEN');
 
-  config.headers.Authorization = `Bearer ${token}`
+  if (token) {
+    // Verificar si el token es válido aquí
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
-})
+});
+
 console.log("URL base:", axiosClient.defaults.baseURL);
 
-axiosClient.interceptors.response.use((response) => {
-  return response;
-}, (error) => {
-  try{
-      const {response} = error;
+axiosClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    try {
+      const { response } = error;
+
       if (response.status === 401) {
-      localStorage.removeItem('ACCESS_TOKEN')
+        // Manejar el error de autenticación aquí
+        localStorage.removeItem('ACCESS_TOKEN');
+        // Mostrar un mensaje al usuario o redirigir a la página de inicio de sesión
       }
-     } catch (e) {
+    } catch (e) {
       console.error(e);
-     }
-  throw error;
-})
+    }
+
+    throw error;
+  }
+);
+
 
 export default axiosClient

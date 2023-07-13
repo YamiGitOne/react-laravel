@@ -1,4 +1,8 @@
 <?php
+use App\Http\Requests\SignupRequest;
+use App\Http\Requests\LoginRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 namespace App\Http\Controllers\Api;
 
@@ -16,7 +20,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bccrypt($data['password']),
+            'password' => bcrypt($data['password']),
         ]);
 
         $token = $user->createToken('main')->plainTextToken;
@@ -38,7 +42,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = $request->user();
-        $user->currentAccesToken()->delete();
+        $user->currentAccessToken()->delete();
         return response('', 204);
     }
 }
