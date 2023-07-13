@@ -21,6 +21,17 @@ export default function Signup() {
       password_confirmation: passwordConfirmationRef.current.value,
     };
 
+     // Validar campos vacíos
+     if (
+      nameRef.current.value.trim() === "" ||
+      emailRef.current.value.trim() === "" ||
+      passwordRef.current.value.trim() === "" ||
+      passwordConfirmationRef.current.value.trim() === ""
+    ) {
+      setErrors({ form: ["All fields are required"] });
+      return;
+    }
+    
     // Validaciones de campos
     let formIsValid = true;
 
@@ -47,21 +58,12 @@ export default function Signup() {
       });
     }
     console.log(payload);
-    // Validar campos vacíos
-    if (
-      nameRef.current.value.trim() === "" ||
-      emailRef.current.value.trim() === "" ||
-      passwordRef.current.value.trim() === "" ||
-      passwordConfirmationRef.current.value.trim() === ""
-    ) {
-      setErrors({ form: ["All fields are required"] });
-      return;
-    }
+   
 
     if (!formIsValid) {
       return;
     }
-    console.log(payload)
+
     try {
       const { data } = await axiosClient.post("/signup", payload);
       setUser(data.user);
@@ -70,6 +72,8 @@ export default function Signup() {
       const response = error.response;
       if (response && response.status === 422) {
         setErrors(response.data.errors);
+      } else {
+        setErrors({ form: ["An error occurred. Please try again later."] });
       }
     }
   };
