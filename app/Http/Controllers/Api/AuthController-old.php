@@ -16,7 +16,7 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        /**@var /App/Models/User $user */
+        /** @var \App\Models\User $user */
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -33,8 +33,9 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials)){
             return response([
                 'message' => 'La dirección de correo electrónico o la contraseña proporcionadas son incorrectas'
-            ]);
+            ], 422);
         }
+        /** @var User $user */
         $user = Auth::user();
         $token = $user->createToken('main')->plainTextToken;
         return response (compact('user', 'token'));

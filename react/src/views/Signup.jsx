@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
-import axiosClient from "../axios-client.js";
+import { signup } from "../axios-client.js";
 import { useStateContext } from "../contexts/ContextProvider";
 
 export default function Signup() {
@@ -98,6 +98,7 @@ export default function Signup() {
             type="password"
             placeholder="Repeat Password"
           />
+      
           <button className="btn btn-block">Signup</button>
           <p className="message">
             Already registered? <Link to="/login">Sign In</Link>

@@ -1,8 +1,9 @@
 import axios from "axios"
 
+const baseURL = "http://localhost:8000"; // Aquí se define la URL base
 const axiosClient = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
-})
+  baseURL: baseURL
+});
 
 axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('ACCESS_TOKEN');
@@ -15,28 +16,15 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
-console.log("URL base:", axiosClient.defaults.baseURL);
-
-axiosClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    try {
-      const { response } = error;
-
-      if (response.status === 401) {
-        // Manejar el error de autenticación aquí
-        localStorage.removeItem('ACCESS_TOKEN');
-        // Mostrar un mensaje al usuario o redirigir a la página de inicio de sesión
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
+export const signup = async (payload) => {
+  try {
+    const data = await signup(payload);
+    setUser(data.user);
+    setToken(data.token);
+  } catch (error) {  
     throw error;
   }
-);
+};
 
 
 export default axiosClient
